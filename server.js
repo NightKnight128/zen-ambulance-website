@@ -5,6 +5,8 @@ const axios = require("axios");
 const app = express();
 
 
+// Middleware
+
 app.use(cors({
     origin: "*"
 }));
@@ -12,13 +14,22 @@ app.use(cors({
 app.use(express.json());
 
 
+
+// Discord webhook
 const WEBHOOK = process.env.WEBHOOK;
 
 
 
-// Test pagina
+// Rapportage teller
 
-app.get("/", (req,res)=>{
+let rapportageNummer = 1;
+
+
+
+
+// Test
+
+app.get("/", (req, res) => {
 
     res.send("🚑 Zen Ambulance Backend Online");
 
@@ -28,250 +39,227 @@ app.get("/", (req,res)=>{
 
 
 
+
 // Rapportage ontvangen
 
-app.post("/rapportage", async (req,res)=>{
+app.post("/rapportage", async (req, res) => {
 
 
-const data = req.body;
+    const data = req.body;
 
 
+    console.log("📋 Nieuwe rapportage:");
+    console.log(data);
 
-console.log("📋 Nieuwe rapportage ontvangen:");
-console.log(data);
 
 
+    // Controle verplichte gegevens
 
-// Controle verplichte velden
+    if(
+        !data.medewerker ||
+        !data.rang ||
+        !data.locatie ||
+        !data.incident
+    ){
 
-if(
-!data.medewerker ||
-!data.rang ||
-!data.incident ||
-!data.locatie
-){
+        return res.status(400).json({
 
-return res.status(400).json({
+            error:"Verplichte gegevens ontbreken"
 
-success:false,
+        });
 
-message:
-"Verplichte velden ontbreken"
+    }
 
-});
 
-}
 
 
 
+    let kleur = 16711680;
 
 
-try{
+    if(data.prioriteit === "P2 - Dringende melding"){
 
+        kleur = 16753920;
 
-await axios.post(WEBHOOK, {
+    }
 
 
-embeds:[
+    if(data.prioriteit === "P3 - Normale melding"){
 
-{
+        kleur = 65280;
 
-title:"🚑 Nieuwe Ambulance Rapportage",
+    }
 
-color:16711680,
 
 
-fields:[
 
 
-{
-name:"👤 Medewerker",
-value:
-`${data.medewerker}\n🚑 ${data.rang}`,
-inline:true
-},
+    const rapportageID =
+    `AMB-${String(rapportageNummer).padStart(4,"0")}`;
 
 
+    rapportageNummer++;
 
-{
-name:"📅 Datum",
-value:data.datum || "Niet ingevuld",
-inline:true
-},
 
 
-{
-name:"⏰ Tijd",
-value:data.tijd || "Niet ingevuld",
-inline:true
-},
 
 
+    try{
 
-{
-name:"📍 Locatie",
-value:data.locatie || "Niet ingevuld"
-},
 
+        await axios.post(WEBHOOK, {
 
 
-{
-name:"🚨 Incident",
-value:data.incident || "Niet ingevuld"
-},
+            embeds:[
 
+                {
 
+                    title:
+                    `🚑 Nieuwe Ambulance Rapportage | ${rapportageID}`,
 
-{
-name:"⚠️ Prioriteit",
-value:data.prioriteit || "Niet ingevuld",
-inline:true
-},
 
+                    color:kleur,
 
 
-{
-name:"👥 Betrokken personen",
-value:data.personen || "Geen"
-},
 
+                    fields:[
 
 
-{
-name:"🩺 Patiënt",
-value:data.patient || "Onbekend",
-inline:true
-},
+                        {
+                            name:"👤 Medewerker",
+                            value:
+                            `${data.medewerker}\n🚑 ${data.rang}`,
+                            inline:true
+                        },
 
 
+                        {
+                            name:"📅 Datum",
+                            value:
+                            data.datum || "Niet ingevuld",
+                            inline:true
+                        },
 
-{
-name:"🩹 Klachten / letsel",
-value:data.klachten || "Geen"
-},
 
+                        {
+                            name:"📍 Locatie",
+                            value:
+                            data.locatie
+                        },
 
 
-{
-name:"🩺 ABCDE",
-value:data.ABCDE || "Geen informatie"
-},
+                        {
+                            name:"⚠️ Prioriteit",
+                            value:
+                            data.prioriteit
+                        },
 
 
+                        {
+                            name:"🚨 Incident",
+                            value:
+                            data.incident
+                        },
 
-{
-name:"🚑 Behandeling",
-value:data.behandeling || "Geen"
-},
 
+                        {
+                            name:"🩺 Patiënt",
+                            value:
+                            data.patient || "Onbekend"
+                        },
 
 
-{
-name:"💊 Materialen / medicatie",
-value:data.materiaal || "Geen"
-},
+                        {
+                            name:"🚑 Behandeling",
+                            value:
+                            data.behandeling || "Geen informatie"
+                        },
 
 
+                        {
+                            name:"🚑 Transport",
+                            value:
+                            data.transport
+                        },
 
-{
-name:"🚑 Transport",
-value:data.transport || "Niet ingevuld",
-inline:true
-},
 
+                        {
+                            name:"🏥 Bestemming",
+                            value:
+                            data.bestemming || "Geen"
+                        },
 
 
-{
-name:"🏥 Bestemming",
-value:data.bestemming || "Geen"
-},
+                        {
+                            name:"✍️ Ondertekend door",
+                            value:
+                            data.ondertekening || data.medewerker
+                        }
 
 
+                    ],
 
-{
-name:"📝 Bijzonderheden",
-value:data.bijzonderheden || "Geen"
-},
 
 
+                    footer:{
 
-{
-name:"💬 Opmerkingen",
-value:data.opmerkingen || "Geen"
-},
+                        text:
+                        "Zen Roleplay Ambulance Dienst"
 
+                    },
 
 
-{
-name:"✍️ Ondertekend door",
-value:data.ondertekening || "Niet ingevuld"
-}
+                    timestamp:
+                    new Date()
 
+                }
 
+            ]
 
-],
+        });
 
 
 
-footer:{
 
-text:"Zen Roleplay Ambulance Dienst"
 
-},
+        res.json({
 
+            success:true,
 
+            message:
+            "Rapportage verzonden"
 
-timestamp:new Date()
+        });
 
 
-}
 
-]
+    }
 
+    catch(error){
 
-});
 
+        console.error(
+            "Discord webhook fout:",
+            error.message
+        );
 
 
 
-res.json({
+        res.status(500).json({
 
-success:true,
+            error:
+            "Discord webhook mislukt"
 
-message:
-"Rapportage verzonden"
+        });
 
-});
 
 
-
-}
-
-catch(error){
-
-
-console.error(
-"Discord webhook fout:",
-error.message
-);
-
-
-
-res.status(500).json({
-
-success:false,
-
-message:
-"Discord verzenden mislukt"
-
-});
-
-
-}
+    }
 
 
 
 });
+
 
 
 
@@ -280,13 +268,12 @@ message:
 const PORT = process.env.PORT || 3000;
 
 
-
 app.listen(PORT,"0.0.0.0",()=>{
 
 
-console.log(
-`🚑 Zen Ambulance Backend draait op poort ${PORT}`
-);
+    console.log(
+        `🚑 Zen Ambulance Backend draait op poort ${PORT}`
+    );
 
 
 });
