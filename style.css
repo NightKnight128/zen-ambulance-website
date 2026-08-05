@@ -1,1 +1,53 @@
+body {
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#111;
+    color:white;
+}
 
+
+header {
+    background:#d90429;
+    padding:25px;
+    text-align:center;
+}
+
+
+nav a {
+    color:white;
+    margin:10px;
+    text-decoration:none;
+}
+
+
+.hero {
+    padding:80px 20px;
+    text-align:center;
+    background:#003566;
+}
+
+
+.cards {
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    padding:40px;
+}
+
+
+.cards div {
+    background:#222;
+    padding:25px;
+    border-radius:15px;
+}
+
+
+.content {
+    padding:40px;
+}
+
+
+footer {
+    text-align:center;
+    padding:20px;
+}
