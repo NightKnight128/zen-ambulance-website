@@ -33,53 +33,100 @@ app.post("/rapportage", async (req, res) => {
 
                     fields: [
 
-                        {
-                            name: "👤 Medewerker",
-                            value: data.medewerker || "Niet ingevuld"
-                        },
+{
+    name: "👤 Medewerker",
+    value: data.medewerker || "Niet ingevuld",
+    inline: true
+},
 
-                        {
-                            name: "📅 Datum",
-                            value: data.datum || "Niet ingevuld"
-                        },
+{
+    name: "📅 Datum",
+    value: data.datum || "Niet ingevuld",
+    inline: true
+},
 
-                        {
-                            name: "⏰ Tijd",
-                            value: data.tijd || "Niet ingevuld"
-                        },
+{
+    name: "⏰ Tijd",
+    value: data.tijd || "Niet ingevuld",
+    inline: true
+},
 
-                        {
-                            name: "📍 Locatie",
-                            value: data.locatie || "Niet ingevuld"
-                        },
+{
+    name: "📍 Locatie melding",
+    value: data.locatie || "Niet ingevuld"
+},
 
-                        {
-                            name: "🚨 Incident",
-                            value: data.incident || "Niet ingevuld"
-                        },
+{
+    name: "🚨 Type incident",
+    value: data.incident || "Niet ingevuld"
+},
 
-                        {
-                            name: "⚠️ Prioriteit",
-                            value: data.prioriteit || "Niet ingevuld"
-                        },
+{
+    name: "⚠️ Prioriteit",
+    value: data.prioriteit || "Niet ingevuld",
+    inline: true
+},
 
-                        {
-                            name: "🩺 Patiënt",
-                            value: data.patient || "Niet ingevuld"
-                        },
+{
+    name: "👥 Betrokken personen",
+    value: data.personen || "Niet ingevuld"
+},
 
-                        {
-                            name: "💉 Behandeling",
-                            value: data.behandeling || "Niet ingevuld"
-                        },
+{
+    name: "🧑‍⚕️ Patiënt",
+    value: data.patient || "Niet ingevuld",
+    inline: true
+},
 
-                        {
-                            name: "📝 Opmerkingen",
-                            value: data.opmerkingen || "Geen"
-                        }
+{
+    name: "🩹 Klachten / letsel",
+    value: data.klachten || "Niet ingevuld"
+},
 
-                    ],
+{
+    name: "🩺 ABCDE Beoordeling",
+    value: data.ABCDE || "Niet ingevuld"
+},
 
+{
+    name: "🚑 Uitgevoerde handelingen",
+    value: data.behandeling || "Niet ingevuld"
+},
+
+{
+    name: "💊 Medicatie / materialen",
+    value: data.materiaal || "Niet ingevuld"
+},
+
+{
+    name: "🚑 Transport",
+    value: data.transport || "Niet ingevuld",
+    inline: true
+},
+
+{
+    name: "🏥 Bestemming",
+    value: data.bestemming || "Niet ingevuld",
+    inline: true
+},
+
+{
+    name: "📝 Bijzonderheden",
+    value: data.bijzonderheden || "Geen"
+},
+
+{
+    name: "💬 Opmerkingen",
+    value: data.opmerkingen || "Geen"
+},
+
+{
+    name: "✍️ Ondertekend door",
+    value: data.ondertekening || "Niet ingevuld",
+    inline: true
+}
+
+],
                     footer: {
                         text: "Zen Roleplay Ambulance"
                     },
